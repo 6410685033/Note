@@ -11,6 +11,7 @@ import FirebaseFirestoreSwift
 struct NoteView: View {
     
     @StateObject var viewModel: NoteViewModel
+    @StateObject private var noteItemViewModel = NoteItemViewModel()
     @FirestoreQuery var items: [NoteItem]
     @State private var selectedNote: NoteItem?
     
@@ -20,40 +21,40 @@ struct NoteView: View {
     }
     
     var body: some View {
-            NavigationView {
-                VStack {
-                    List(items) { item in
-                        NoteItemView(item: item)
-                            .swipeActions {
-                                Button {
-                                    viewModel.delete(id: item.id)
-                                } label: {
-                                    Label("Delete", systemImage: "trash.fill")
-                                }
+        NavigationView {
+            VStack {
+                List(items) { item in
+                    NoteItemView(item: item)
+                        .swipeActions {
+                            Button {
+                                viewModel.delete(id: item.id)
+                            } label: {
+                                Label("Delete", systemImage: "trash.fill")
                             }
-                            .tint(.red)
-                            .onTapGesture {
-                                selectedNote = item
-                            }
-                    }
-                    .listStyle(PlainListStyle())
-                    .sheet(item: $selectedNote) { note in
-                        NoteContentView(item: note)
-                    }
+                        }
+                        .tint(.red)
+                        .onTapGesture {
+                            selectedNote = item
+                        }
                 }
-                .navigationTitle("Notes")
-                .toolbar {
-                    Button {
-                        viewModel.showingnewItemView = true
-                    } label: {
-                        Label("Add", systemImage: "plus")
-                    }
-                }
-                .sheet(isPresented: $viewModel.showingnewItemView) {
-                    NewItemView(newItemPresented: $viewModel.showingnewItemView)
+                .listStyle(PlainListStyle())
+                .sheet(item: $selectedNote) { note in
+                    NoteContentView(item: note, viewModel: noteItemViewModel)
                 }
             }
+            .navigationTitle("Notes")
+            .toolbar {
+                Button {
+                    viewModel.showingnewItemView = true
+                } label: {
+                    Label("Add", systemImage: "plus")
+                }
+            }
+            .sheet(isPresented: $viewModel.showingnewItemView) {
+                NewItemView(newItemPresented: $viewModel.showingnewItemView)
+            }
         }
+    }
 }
 
 #Preview {
