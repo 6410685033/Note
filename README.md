@@ -3,7 +3,7 @@
 # CN436_AS4: Note App
 
 An iOS Note App 
-[Demo Clip]()
+[Demo Clip](https://youtu.be/-SKyd_fC4k4)
 
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
